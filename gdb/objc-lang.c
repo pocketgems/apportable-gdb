@@ -1819,7 +1819,12 @@ int new_objc_runtime_internals ()
   if (!initialized)
   {
     initialized = 1;
+#ifdef _WIN32 
+    // force new objc runtime on windows
+    ret_val = 1;
+#else
     ret_val = lookup_minimal_symbol ("__objc_personality_v0", NULL, NULL) != NULL;
+#endif
   }
   return ret_val;
 }

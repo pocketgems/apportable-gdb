@@ -57,6 +57,8 @@ tgetstr (char *name, char **area)
   return NULL;
 }
 
+//conflicts with libncurses, ommiting for now 
+/*    
 int
 tputs (char *string, int nlines, int (*outfun) ())
 {
@@ -65,6 +67,7 @@ tputs (char *string, int nlines, int (*outfun) ())
 
   return 0;
 }
+*/
 
 char *
 tgoto (const char *cap, int col, int row)
