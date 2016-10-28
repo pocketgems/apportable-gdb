@@ -38,17 +38,25 @@ Debugging gdb
 
 #### Building GDB with TUI support under MSYS:
 
+- Install msys from Mingw installer and run {MinGW installation folder}/msys/{version}/msys.bat. Run the rest of the commands in that shell
+
+- run `mingw install libexpat-dev mingw-developer-toolkit-bin` to make sure you have dependencies installed
+
 - Install `libncurses`
 
- Download and extract `ncurses` source http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
  ```
+wget http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+tar -xvzf ncurses-5.9.tar.gz
+cd ncurses-5.9
 ./configure --host=x86_64-w64-mingw32 --enable-term-driver --enable-sp-funcs
 make
 make install
 ```
-- git clone git@github.com:pocketgems/apportable-gdb.git (if not already done)
-- mkdir gdb_debug
-- cd gdb_debug
-- CFLAGS="-g -Wno-unused-value -Wno-unused-function" LDFLAGS=-L/usr/local/lib ../configure --enable-tui --host=i686-pc-mingw32 --with-expat
-- make
+- `git clone git@github.com:pocketgems/apportable-gdb.git` (if not already done)
+- `cd apportable-gdb`
+- `checkout windows_support`
+- `mkdir gdb_debug`
+- `cd gdb_debug`
+- `CFLAGS="-g -Wno-unused-value -Wno-unused-function" LDFLAGS=-L/usr/local/lib ../configure --enable-tui --host=i686-pc-mingw32 --with-expat`
+- `make`
 - ls -l gdb/gdb

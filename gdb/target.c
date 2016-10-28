@@ -1219,10 +1219,10 @@ mystrnlen(const char *begin, size_t maxlen) {
 }
 
 /* target_read_string -- read a null terminated string, up to LEN bytes,
-   from MEMADDR in target.  Set *ERRNOP to the errno code, or 0 if successful.
-   Set *STRING to a pointer to malloc'd memory containing the data; the caller
-   is responsible for freeing it.  Return the number of bytes successfully
-   read.  */
+   from MEMADDR in target.  If errnop is not null, set *ERRNOP to the errno
+   code, or 0 if successful. Set *STRING to a pointer to malloc'd memory
+   containing the data; the caller is responsible for freeing it.
+   Return the number of bytes successfully read.  */
 
 int
 target_read_string (CORE_ADDR memaddr, char **string, int len, int *errnop)
@@ -1240,19 +1240,19 @@ target_read_string (CORE_ADDR memaddr, char **string, int len, int *errnop)
   /* currently allocated output length */
   int outlen;
   int i;
+  int err = 0;
 
   chunksize = MIN (sizeof(buffer) / sizeof(gdb_byte), (len + 3) & ~3);
   memstart = memaddr & ~3;
   outstart = 0;
   chunkterm = outlen = chunksize;
   *string = xmalloc (outlen);
-  *errnop = 0;
 
   while (len > 0 && chunksize == chunkterm)
     {
-	  *errnop = target_read_memory (memstart, buffer,
+	  err = target_read_memory (memstart, buffer,
 			    chunksize * sizeof (gdb_byte));
-	  if (*errnop != 0)
+	  if (err != 0)
 	    {
 		  if (chunksize <= 4)
 		    break;
@@ -1286,6 +1286,9 @@ target_read_string (CORE_ADDR memaddr, char **string, int len, int *errnop)
   if (outstart == outlen)
     *string = xrealloc (*string, outlen + 1);
   *(*string + outstart) = '\x00';
+  if (errnop) {
+    *errnop = err;
+  }
   return outstart;
 }
 
